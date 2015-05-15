@@ -240,6 +240,358 @@ public class PersonaDAO {
         }
     }
 
+    public boolean setNombre(int UUID, String nombre){
+        try {
+            PublicanteDAO pdao = new PublicanteDAO();
+            pdao.setConnection(ConnectionAdmin.getConnection());
+            if(nombre.length()>20 || nombre.length()==0) return false;
+            if (UUID != -1) {
+                String query = "update persona set nombre=? where Publicante_UUID=?";
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setString(1, nombre);
+                ps.setInt(2, UUID);
+                int alteredRows = ps.executeUpdate();
+                if (alteredRows == 1) {
+                    pdao.closeConnection();
+                    con.commit();
+                    return true;
+                }else{
+                    pdao.closeConnection();
+                    con.rollback();
+                    return false;
+                }
+            } else {
+                pdao.closeConnection();
+                con.rollback();
+                return false;
+            }
+        }catch(Exception ex){
+            return false;
+        }
+    }
+
+    public boolean setApellidos(int UUID, String ap){
+        try {
+            PublicanteDAO pdao = new PublicanteDAO();
+            pdao.setConnection(ConnectionAdmin.getConnection());
+            if(ap.length()>60 || ap.length()==0) return false;
+            if (UUID != -1) {
+                String query = "update persona set apellidos=? where Publicante_UUID=?";
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setString(1, ap);
+                ps.setInt(2, UUID);
+                int alteredRows = ps.executeUpdate();
+                if (alteredRows == 1) {
+                    pdao.closeConnection();
+                    con.commit();
+                    return true;
+                }else{
+                    pdao.closeConnection();
+                    con.rollback();
+                    return false;
+                }
+            } else {
+                pdao.closeConnection();
+                con.rollback();
+                return false;
+            }
+        }catch(Exception ex){
+            return false;
+        }
+    }
+
+    public boolean setAvatar(int UUID, String url){
+        try {
+            PublicanteDAO pdao = new PublicanteDAO();
+            pdao.setConnection(ConnectionAdmin.getConnection());
+            if(url.length()>100 || url.length()==0) return false;
+            if (UUID != -1) {
+                String query = "update persona set avatar=? where Publicante_UUID=?";
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setString(1, url);
+                ps.setInt(2, UUID);
+                int alteredRows = ps.executeUpdate();
+                if (alteredRows == 1) {
+                    pdao.closeConnection();
+                    con.commit();
+                    return true;
+                }else{
+                    pdao.closeConnection();
+                    con.rollback();
+                    return false;
+                }
+            } else {
+                pdao.closeConnection();
+                con.rollback();
+                return false;
+            }
+        }catch(Exception ex){
+            return false;
+        }
+    }
+
+    public boolean setEmail(int UUID, String mail){
+        try {
+            PublicanteDAO pdao = new PublicanteDAO();
+            pdao.setConnection(ConnectionAdmin.getConnection());
+            if(mail.length()>60 || mail.length()==0) return false;
+            if (UUID != -1) {
+                String query = "update persona set email=? where Publicante_UUID=?";
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setString(1, mail);
+                ps.setInt(2, UUID);
+                int alteredRows = ps.executeUpdate();
+                if (alteredRows == 1) {
+                    pdao.closeConnection();
+                    con.commit();
+                    return true;
+                }else{
+                    pdao.closeConnection();
+                    con.rollback();
+                    return false;
+                }
+            } else {
+                pdao.closeConnection();
+                con.rollback();
+                return false;
+            }
+        }catch(Exception ex){
+            return false;
+        }
+    }
+
+    public boolean setPassword(int UUID, String pass){
+        try {
+            PublicanteDAO pdao = new PublicanteDAO();
+            pdao.setConnection(ConnectionAdmin.getConnection());
+            if(pass.length()>20 || pass.length()==0) return false;
+            if (UUID != -1) {
+                String query = "update persona set pass=? where Publicante_UUID=?";
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setString(1, pass);
+                ps.setInt(2, UUID);
+                int alteredRows = ps.executeUpdate();
+                if (alteredRows == 1) {
+                    pdao.closeConnection();
+                    con.commit();
+                    return true;
+                }else{
+                    pdao.closeConnection();
+                    con.rollback();
+                    return false;
+                }
+            } else {
+                pdao.closeConnection();
+                con.rollback();
+                return false;
+            }
+        }catch(Exception ex){
+            return false;
+        }
+    }
+
+    public boolean setNacimiento(int UUID, int nac){
+        try {
+            PublicanteDAO pdao = new PublicanteDAO();
+            pdao.setConnection(ConnectionAdmin.getConnection());
+            if (UUID != -1) {
+                String query = "update persona set nacimiento=? where Publicante_UUID=?";
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setInt(1, nac);
+                ps.setInt(2, UUID);
+                int alteredRows = ps.executeUpdate();
+                if (alteredRows == 1) {
+                    pdao.closeConnection();
+                    con.commit();
+                    return true;
+                }else{
+                    pdao.closeConnection();
+                    con.rollback();
+                    return false;
+                }
+            } else {
+                pdao.closeConnection();
+                con.rollback();
+                return false;
+            }
+        }catch(Exception ex){
+            return false;
+        }
+    }
+
+    public boolean setCiudad(int UUID, String city){
+        try {
+            PublicanteDAO pdao = new PublicanteDAO();
+            pdao.setConnection(ConnectionAdmin.getConnection());
+            if(city.length()>45 || city.length()==0) return false;
+            if (UUID != -1) {
+                String query = "update persona set ciudad=? where Publicante_UUID=?";
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setString(1, city);
+                ps.setInt(2, UUID);
+                int alteredRows = ps.executeUpdate();
+                if (alteredRows == 1) {
+                    pdao.closeConnection();
+                    con.commit();
+                    return true;
+                }else{
+                    pdao.closeConnection();
+                    con.rollback();
+                    return false;
+                }
+            } else {
+                pdao.closeConnection();
+                con.rollback();
+                return false;
+            }
+        }catch(Exception ex){
+            return false;
+        }
+    }
+
+    public boolean setPais(int UUID, String pais){
+        try {
+            PublicanteDAO pdao = new PublicanteDAO();
+            pdao.setConnection(ConnectionAdmin.getConnection());
+            if(pais.length()>45 || pais.length()==0) return false;
+            if (UUID != -1) {
+                String query = "update persona set pais=? where Publicante_UUID=?";
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setString(1, pais);
+                ps.setInt(2, UUID);
+                int alteredRows = ps.executeUpdate();
+                if (alteredRows == 1) {
+                    pdao.closeConnection();
+                    con.commit();
+                    return true;
+                }else{
+                    pdao.closeConnection();
+                    con.rollback();
+                    return false;
+                }
+            } else {
+                pdao.closeConnection();
+                con.rollback();
+                return false;
+            }
+        }catch(Exception ex){
+            return false;
+        }
+    }
+
+    public boolean setTelefono(int UUID, int tel){
+        try {
+            PublicanteDAO pdao = new PublicanteDAO();
+            pdao.setConnection(ConnectionAdmin.getConnection());
+            if (UUID != -1) {
+                String query = "update persona set telefono=? where Publicante_UUID=?";
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setInt(1, tel);
+                ps.setInt(2, UUID);
+                int alteredRows = ps.executeUpdate();
+                if (alteredRows == 1) {
+                    pdao.closeConnection();
+                    con.commit();
+                    return true;
+                }else{
+                    pdao.closeConnection();
+                    con.rollback();
+                    return false;
+                }
+            } else {
+                pdao.closeConnection();
+                con.rollback();
+                return false;
+            }
+        }catch(Exception ex){
+            return false;
+        }
+    }
+
+    public boolean setDescripcion(int UUID, String descr){
+        try {
+            PublicanteDAO pdao = new PublicanteDAO();
+            pdao.setConnection(ConnectionAdmin.getConnection());
+            if(descr.length()>144 || descr.length()==0) return false;
+            if (UUID != -1) {
+                String query = "update persona set descripcion=? where Publicante_UUID=?";
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setString(1, descr);
+                ps.setInt(2, UUID);
+                int alteredRows = ps.executeUpdate();
+                if (alteredRows == 1) {
+                    pdao.closeConnection();
+                    con.commit();
+                    return true;
+                }else{
+                    pdao.closeConnection();
+                    con.rollback();
+                    return false;
+                }
+            } else {
+                pdao.closeConnection();
+                con.rollback();
+                return false;
+            }
+        }catch(Exception ex){
+            return false;
+        }
+    }
+
+    public boolean borrarPersona(int uuid){
+        try {
+            String query1 = "delete from persona_tiene_tag where UUID_P=?";
+            PreparedStatement ps1 = con.prepareStatement(query1);
+            ps1.setInt(1, uuid);
+            int eliminadas_relacion1 = ps1.executeUpdate();
+
+            String query2 = "delete from tiene_aptitud where UUID_P=?";
+            PreparedStatement ps2 = con.prepareStatement(query2);
+            ps2.setInt(1, uuid);
+            int eliminadas_relacion2 = ps2.executeUpdate();
+
+            String query3 = "delete from pendiente_aceptacion where persona=?";
+            PreparedStatement ps3 = con.prepareStatement(query3);
+            ps3.setInt(1, uuid);
+            int eliminadas_relacion3 = ps3.executeUpdate();
+
+            String query4 = "delete from es_integrante where UUID_P=?";
+            PreparedStatement ps4 = con.prepareStatement(query4);
+            ps4.setInt(1, uuid);
+            int eliminadas_relacion4 = ps4.executeUpdate();
+
+            String query5 = "delete from persona where Publicante_UUID=?";
+            PreparedStatement ps5 = con.prepareStatement(query5);
+            ps5.setInt(1, uuid);
+            int eliminadas_relacion5 = ps5.executeUpdate();
+
+            System.out.println("1: "+eliminadas_relacion1);
+            System.out.println("2: "+eliminadas_relacion2);
+            System.out.println("3: "+eliminadas_relacion3);
+            System.out.println("4: "+eliminadas_relacion4);
+            System.out.println("persona: " + eliminadas_relacion5);
+
+            con.commit();
+
+            PublicanteDAO pdao = new PublicanteDAO();
+            pdao.setConnection(ConnectionAdmin.getConnection());
+            int eliminadas_entidad = pdao.borrarPublicante(uuid);
+            pdao.closeConnection();
+
+            System.out.println("publicante:" +eliminadas_entidad);
+
+            if (eliminadas_entidad == 1) {
+                con.commit();
+                return true;
+            }else{
+                con.rollback();
+                return false;
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();return false;
+        }
+    }
+
     public boolean closeConnection(){
         try {
             con.close();

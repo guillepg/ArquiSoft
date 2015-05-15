@@ -101,6 +101,18 @@ public class SeguirDAO {
             return null;
         }
     }
+
+    public boolean eliminarSeguidorySeguido(int uuid){
+        try{
+            String query1 = "delete from seguir where seguidor=? or seguido=?";
+            PreparedStatement ps1 = con.prepareStatement(query1);
+            ps1.setInt(1, uuid);
+            ps1.setInt(2, uuid);
+            int resul1 = ps1.executeUpdate();
+            con.commit();
+            return true;
+        }catch(Exception ex){return false;}
+    }
     
     public boolean closeConnection(){
         try {

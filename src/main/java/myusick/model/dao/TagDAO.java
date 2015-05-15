@@ -174,6 +174,52 @@ public class TagDAO {
         }
     }
 
+    public boolean editarTag(int id, String nuevo){
+        try {
+            if(nuevo.length()>45 || nuevo.length()==0) return false;
+            String query = "update tag set nombreTag=? where idTag=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, nuevo);
+            ps.setInt(2, id);
+            int alteredRows = ps.executeUpdate();
+            if (alteredRows == 1) {
+                closeConnection();
+                con.commit();
+                return true;
+            }else{
+                closeConnection();
+                con.rollback();
+                return false;
+            }
+        }catch(Exception ex){
+            return false;
+        }
+    }
+
+    public boolean borrarTag(int id){
+        try {
+            String query1 = "delete from grupo_tiene_tag where idtag=?";
+            PreparedStatement ps1 = con.prepareStatement(query1);
+            ps1.setInt(1, id);
+            int eliminadas_relacion1 = ps1.executeUpdate();
+
+            String query2 = "delete from persona_tiene_tag where idtag=?";
+            PreparedStatement ps2 = con.prepareStatement(query2);
+            ps2.setInt(1, id);
+            int eliminadas_relacion2 = ps2.executeUpdate();
+
+            String query3 = "delete from tag where idtag=?";
+            PreparedStatement ps3 = con.prepareStatement(query3);
+            ps3.setInt(1, id);
+            int eliminadas_entidad = ps3.executeUpdate();
+
+            if (eliminadas_entidad == 1) { con.commit(); return true; }
+            else{ con.rollback(); return false; }
+        }catch(Exception ex){
+            ex.printStackTrace();return false;
+        }
+    }
+
     public boolean closeConnection(){
         try {
             con.close();

@@ -324,6 +324,170 @@ public class GrupoDAO {
         }
     }
 
+    public boolean setNombre(int UUID, String nombre) {
+        try {
+            PublicanteDAO pdao = new PublicanteDAO();
+            pdao.setConnection(ConnectionAdmin.getConnection());
+            if (nombre.length() > 45 || nombre.length() == 0) return false;
+            if (UUID != -1) {
+                String query = "update grupo set nombre=? where Publicante_UUID=?";
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setString(1, nombre);
+                ps.setInt(2, UUID);
+                int alteredRows = ps.executeUpdate();
+                if (alteredRows == 1) {
+                    pdao.closeConnection();
+                    con.commit();
+                    return true;
+                } else {
+                    pdao.closeConnection();
+                    con.rollback();
+                    return false;
+                }
+            } else {
+                pdao.closeConnection();
+                con.rollback();
+                return false;
+            }
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+
+    public boolean setAnyo(int UUID, int nac){
+        try {
+            PublicanteDAO pdao = new PublicanteDAO();
+            pdao.setConnection(ConnectionAdmin.getConnection());
+            if (UUID != -1) {
+                String query = "update grupo set AnyoFundacion=? where Publicante_UUID=?";
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setInt(1, nac);
+                ps.setInt(2, UUID);
+                int alteredRows = ps.executeUpdate();
+                if (alteredRows == 1) {
+                    pdao.closeConnection();
+                    con.commit();
+                    return true;
+                }else{
+                    pdao.closeConnection();
+                    con.rollback();
+                    return false;
+                }
+            } else {
+                pdao.closeConnection();
+                con.rollback();
+                return false;
+            }
+        }catch(Exception ex){
+            return false;
+        }
+    }
+
+    public boolean setDescripcion(int UUID, String descr){
+        try {
+            PublicanteDAO pdao = new PublicanteDAO();
+            pdao.setConnection(ConnectionAdmin.getConnection());
+            if(descr.length()>144 || descr.length()==0) return false;
+            if (UUID != -1) {
+                String query = "update grupo set descripcion=? where Publicante_UUID=?";
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setString(1, descr);
+                ps.setInt(2, UUID);
+                int alteredRows = ps.executeUpdate();
+                if (alteredRows == 1) {
+                    pdao.closeConnection();
+                    con.commit();
+                    return true;
+                }else{
+                    pdao.closeConnection();
+                    con.rollback();
+                    return false;
+                }
+            } else {
+                pdao.closeConnection();
+                con.rollback();
+                return false;
+            }
+        }catch(Exception ex){
+            return false;
+        }
+    }
+
+    public boolean setAvatar(int UUID, String url){
+        try {
+            PublicanteDAO pdao = new PublicanteDAO();
+            pdao.setConnection(ConnectionAdmin.getConnection());
+            if(url.length()>100 || url.length()==0) return false;
+            if (UUID != -1) {
+                String query = "update grupo set avatar=? where Publicante_UUID=?";
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setString(1, url);
+                ps.setInt(2, UUID);
+                int alteredRows = ps.executeUpdate();
+                if (alteredRows == 1) {
+                    pdao.closeConnection();
+                    con.commit();
+                    return true;
+                }else{
+                    pdao.closeConnection();
+                    con.rollback();
+                    return false;
+                }
+            } else {
+                pdao.closeConnection();
+                con.rollback();
+                return false;
+            }
+        }catch(Exception ex){
+            return false;
+        }
+    }
+
+    public boolean borrarGrupo(int uuid){
+        try {
+            String query1 = "delete from grupo_tiene_tag where UUID_G=?";
+            PreparedStatement ps1 = con.prepareStatement(query1);
+            ps1.setInt(1, uuid);
+            int eliminadas_relacion1 = ps1.executeUpdate();
+
+            String query2 = "delete from es_integrante where UUID_G=?";
+            PreparedStatement ps2 = con.prepareStatement(query2);
+            ps2.setInt(1, uuid);
+            int eliminadas_relacion2 = ps2.executeUpdate();
+
+            String query3 = "delete from pendiente_aceptacion where grupo=?";
+            PreparedStatement ps3 = con.prepareStatement(query3);
+            ps3.setInt(1, uuid);
+            int eliminadas_relacion3 = ps3.executeUpdate();
+
+            String query4 = "delete from grupo where Publicante_UUID=?";
+            PreparedStatement ps4 = con.prepareStatement(query4);
+            ps4.setInt(1, uuid);
+            int eliminadas_relacion4 = ps4.executeUpdate();
+
+            con.commit();
+
+            PublicanteDAO pdao = new PublicanteDAO();
+            pdao.setConnection(ConnectionAdmin.getConnection());
+            int eliminadas_entidad = pdao.borrarPublicante(uuid);
+
+            System.out.println(eliminadas_relacion1+", "+eliminadas_relacion2+", "+eliminadas_relacion3+", "+eliminadas_relacion4);
+            if (eliminadas_entidad == 1) {
+                con.commit();
+                pdao.closeConnection();
+                return true;
+            }else{
+                con.rollback();
+                pdao.closeConnection();
+                return false;
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();return false;
+        }
+    }
+
+
     public boolean closeConnection(){
         try {
             con.close();

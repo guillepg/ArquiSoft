@@ -155,6 +155,41 @@ public class PublicacionDAO {
         }
     }
 
+    public boolean editarPublicacion(int id, int fecha, String contenido){
+        try {
+            String query1 = "update publicacion set fecha=? and contenido=? where idpublicacion=?";
+            PreparedStatement ps1 = con.prepareStatement(query1);
+            ps1.setInt(1, fecha);
+            ps1.setString(2, contenido);
+            ps1.setInt(3, id);
+            int editadas_entidad = ps1.executeUpdate();
+
+            if (editadas_entidad == 1) { con.commit(); return true; }
+            else{ con.rollback(); return false; }
+        }catch(Exception ex){
+            ex.printStackTrace();return false;
+        }
+    }
+
+    public boolean borrarPublicacion(int id){
+        try {
+            String query1 = "delete from publicacion where idpublicacion=?";
+            PreparedStatement ps1 = con.prepareStatement(query1);
+            ps1.setInt(1, id);
+            int eliminadas_entidad = ps1.executeUpdate();
+
+            if (eliminadas_entidad == 1) {
+                con.commit();
+                return true;
+            }else{
+                con.rollback();
+                return false;
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();return false;
+        }
+    }
+
     public boolean closeConnection(){
         try {
             con.close();

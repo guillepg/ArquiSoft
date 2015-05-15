@@ -133,6 +133,45 @@ public class AptitudDAO {
         }
     }
 
+    public boolean editarAptitud(int id, String nuevo){
+        try {
+            if(nuevo.length()>45 || nuevo.length()==0) return false;
+            String query = "update aptitud set nombre=? where idaptitud=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, nuevo);
+            ps.setInt(2, id);
+            int alteredRows = ps.executeUpdate();
+            if (alteredRows == 1) {
+                con.commit();
+                return true;
+            }else{
+                con.rollback();
+                return false;
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();return false;
+        }
+    }
+
+    public boolean borrarAptitud(int id){
+        try {
+            String query1 = "delete from tiene_aptitud where idaptitud=?";
+            PreparedStatement ps1 = con.prepareStatement(query1);
+            ps1.setInt(1, id);
+            int eliminadas_relacion = ps1.executeUpdate();
+
+            String query2 = "delete from aptitud where idaptitud=?";
+            PreparedStatement ps2 = con.prepareStatement(query2);
+            ps2.setInt(1, id);
+            int eliminadas_entidad = ps2.executeUpdate();
+
+            if (eliminadas_entidad == 1) { con.commit(); return true; }
+            else{ con.rollback(); return false; }
+        }catch(Exception ex){
+            ex.printStackTrace();return false;
+        }
+    }
+
     public boolean closeConnection(){
         try {
             con.close();
