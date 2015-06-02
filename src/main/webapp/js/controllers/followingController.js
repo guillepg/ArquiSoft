@@ -28,14 +28,19 @@ angular.module('starter')
                 console.log("error");
             });
 
+        $scope.publishers = [];
+
         $http.get(API.URL + API.FOLLOWING_ENDPOINT + $scope.user_id)
             .success(function(data){
                 console.log(data);
+                $scope.publishers = data;
             });
-        
-        $scope.publishers = [
-            {
-                name: "derp"
+
+        $scope.goTo = function(id,type){
+            if(type){
+                $state.go('group', { _groupid: id});
+            }else{
+                $state.go('profile', { _userid: id});
             }
-        ];
+        };
     }]);

@@ -1,10 +1,11 @@
 package myusick.controller;
 
+import myusick.controller.dto.*;
 import myusick.controller.services.*;
 import myusick.controller.dto.GroupDTO;
 import myusick.controller.dto.PublicationsDTO;
 import myusick.controller.dto.RegisterDTO;
-import myusick.controller.dto.TagDTO;
+import myusick.controller.dto.SkillTagDTO;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -96,12 +97,12 @@ public class RestServices {
     @Path("/newtag")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String newTag(@Context UriInfo info, TagDTO tagDTO){
+    public String newTag(@Context UriInfo info, SkillTagDTO tagDTO){
         return TagService.newTag(info, tagDTO);
     }
 
     /**
-     * Crea y/o añade una aptitud a un usuario TODO
+     * Crea y/o añade una aptitud a un usuario
      * @param info
      * @param skillDTO
      * @return
@@ -110,7 +111,7 @@ public class RestServices {
     @Path("/newskill")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String newSkill(@Context UriInfo info, TagDTO skillDTO){
+    public String newSkill(@Context UriInfo info, SkillTagDTO skillDTO){
         return SkillService.newSkill(info, skillDTO);
     }
     
@@ -337,5 +338,19 @@ public class RestServices {
     @Produces(MediaType.APPLICATION_JSON)
     public String searchSkill(@PathParam("term") String term){
         return SearchService.searchSkill(term);
+    }
+
+    /**
+     * Edita el perfil de un publicante con los valores recibidos
+     * @param info
+     * @param editDTO
+     * @return
+     */
+    @POST
+    @Path("/edit/profile")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String editProfile(@Context UriInfo info, EditDTO editDTO){
+        return ProfileService.editProfile(editDTO);
     }
 }

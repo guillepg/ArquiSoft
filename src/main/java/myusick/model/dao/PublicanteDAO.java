@@ -1,152 +1,182 @@
 package myusick.model.dao;
 
-import myusick.model.connection.ConnectionAdmin;
-
+import myusick.model.connection.PoolManager;
 import java.sql.*;
 
 /**
- * Created by Cuenta de clase on 02/04/2015.
+ * Myusick. Arquitectura Software 2015
+ * @author David Recuenco (648701)
+ * @author Guillermo Perez (610382)
+ * @author Sandra Campos (629928)
+ *
+ * Clase DAO que proporciona el acceso a los datos relacionados
+ * con los publicantes del sistema
  */
 public class PublicanteDAO {
 
-    private Connection con;
-
-    public void setConnection(Connection con){
-        try{
-            this.con = con;
-            this.con.setAutoCommit(false);
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-    }
-    public int insertarPublicante(boolean tipo){
+    /**
+     * Inserta un publicante en la base de datos
+     * @param tipo cierto en caso de que sea un grupo, falso
+     *             en caso contrario
+     * @return id que se le ha asignado automaticamente por la bd en
+     * caso de que la insercion sea correcta, -1 en caso de error
+     */
+    public int insertarPublicante(boolean tipo) {
+        PoolManager pool = PoolManager.getInstance();
+        Connection con = pool.getConnection();
         try {
-            String query="insert into publicante (tipoPublicante) values (?)";
+            String query = "insert into publicante (tipoPublicante) values (?)";
             PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            ps.setBoolean(1,tipo);
+            ps.setBoolean(1, tipo);
             int insertedRows = ps.executeUpdate();
-            if(insertedRows == 1){
+            if (insertedRows == 1) {
                 ResultSet keys = ps.getGeneratedKeys();
                 keys.next();
                 int uuid = keys.getInt(1);
                 con.commit();
+                pool.returnConnection(con);
                 return uuid;
-            }else{
+            } else {
                 con.rollback();
+                pool.returnConnection(con);
                 return -1;
             }
 
         } catch (SQLException e) {
-            try{
+            try {
                 con.rollback();
-            }catch(SQLException e2){e2.printStackTrace();}
+            } catch (SQLException e2) {
+                e2.printStackTrace();
+            }
             e.printStackTrace();
+            pool.returnConnection(con);
             return -1;
         }
-        
+
     }
 
-    public String getAvatarById(int id){
-        try{
+    /**
+     * Extrae la url del avatar de un publicante concreto
+     * @param id id del publicante
+     * @return url del avatar del publicante, null en caso de que
+     * el publicante no tenga avatar o que el publicante no exista
+     */
+    public String getAvatarById(int id) {
+        PoolManager pool = PoolManager.getInstance();
+        Connection con = pool.getConnection();
+        try {
             /* Primero intentamos ver si es una persona */
-            String query="select avatar from persona where publicante_uuid = ?";
+            String query = "select avatar from persona where publicante_uuid = ?";
             PreparedStatement ps = con.prepareStatement(query);
-            ps.setInt(1,id);
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            if(!rs.next()){
+            if (!rs.next()) {
                 /* No es una persona, probamos con grupo */
                 con.rollback();
                 query = "select avatar from grupo where publicante_uuid = ?";
                 ps = con.prepareStatement(query);
-                ps.setInt(1,id);
+                ps.setInt(1, id);
                 rs = ps.executeQuery();
-                if(!rs.next()){
+                if (!rs.next()) {
                     /* este publicante no tiene avatar */
                     con.rollback();
+                    pool.returnConnection(con);
                     return null;
                 }
             }
             /* Si llegamos aqui es que hay avatar */
-            return rs.getString(1);
+            String resultado = rs.getString(1);
+            pool.returnConnection(con);
+            return resultado;
 
-        }catch (SQLException e) {
-            try{
+        } catch (SQLException e) {
+            try {
                 con.rollback();
-            }catch(SQLException e2){e2.printStackTrace();}
+            } catch (SQLException e2) {
+                e2.printStackTrace();
+            }
             e.printStackTrace();
+            pool.returnConnection(con);
             return null;
         }
     }
 
-    public String getNombreById(int id){
-        try{
+    /**
+     * Extrae el nombre de un publicante a partir de su id
+     * @param id id del publicante
+     * @return nombre del publicante, null en caso de que
+     * el publicante no exista
+     */
+    public String getNombreById(int id) {
+        PoolManager pool = PoolManager.getInstance();
+        Connection con = pool.getConnection();
+        try {
             /* Primero intentamos ver si es una persona */
-            String query="select nombre from persona where publicante_uuid = ?";
+            String query = "select nombre from persona where publicante_uuid = ?";
             PreparedStatement ps = con.prepareStatement(query);
-            ps.setInt(1,id);
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            if(!rs.next()){
+            if (!rs.next()) {
                 /* No es una persona, probamos con grupo */
                 con.rollback();
                 query = "select nombre from grupo where publicante_uuid = ?";
                 ps = con.prepareStatement(query);
-                ps.setInt(1,id);
+                ps.setInt(1, id);
                 rs = ps.executeQuery();
-                if(!rs.next()){
+                if (!rs.next()) {
                     /* este publicante no tiene avatar */
                     con.rollback();
+                    pool.returnConnection(con);
                     return null;
                 }
             }
             /* Si llegamos aqui es que hay avatar */
-            return rs.getString(1);
+            String resultado = rs.getString(1);
+            pool.returnConnection(con);
+            return resultado;
 
-        }catch (SQLException e) {
-            try{
+        } catch (SQLException e) {
+            try {
                 con.rollback();
-            }catch(SQLException e2){e2.printStackTrace();}
+            } catch (SQLException e2) {
+                e2.printStackTrace();
+            }
             e.printStackTrace();
+            pool.returnConnection(con);
             return null;
         }
     }
 
-    public int editarPublicante(int uuid, boolean nuevo_tipo){
-        try{
-            String query4 = "update publicante set tipoPublicante=? where UUID=?";
-            PreparedStatement ps = con.prepareStatement(query4);
-            ps.setBoolean(1, nuevo_tipo);
-            ps.setInt(2, uuid);
-            int resul = ps.executeUpdate();
-            return resul;
-        }catch(Exception ex){
-            ex.printStackTrace();return -1;
-        }
-    }
-
-    public int borrarPublicante(int uuid){
-        try{
+    /**
+     * Elimina un publicante de la base de datos
+     * @param uuid id del publicante
+     * @return cierto en caso de que la operacion se realice con exito,
+     * falso en caso contrario
+     */
+    public boolean borrarPublicante(int uuid) {
+        PoolManager pool = PoolManager.getInstance();
+        Connection con = pool.getConnection();
+        try {
             SeguirDAO sdao = new SeguirDAO();
-            sdao.setConnection(ConnectionAdmin.getConnection());
-            System.out.println("seguidor/seguido: "+sdao.eliminarSeguidorySeguido(uuid));
-            sdao.closeConnection();
+            System.out.println("seguidor/seguido: " + sdao.eliminarSeguidorySeguido(uuid));
 
             String query2 = "delete from publicante where UUID=?";
             PreparedStatement ps2 = con.prepareStatement(query2);
             ps2.setInt(1, uuid);
-            int resul = ps2.executeUpdate();
-            return resul;
-        }catch(Exception ex){
-            ex.printStackTrace();return -1;
-        }
-    }
-
-    public boolean closeConnection(){
-        try {
-            con.close();
+            ps2.executeUpdate();
+            con.commit();
+            pool.returnConnection(con);
             return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            try{
+                con.rollback();
+            }catch (SQLException e2){
+                e2.printStackTrace();
+            }
+            pool.returnConnection(con);
             return false;
         }
     }
+
 }

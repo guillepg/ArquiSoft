@@ -1,6 +1,7 @@
 package myusick.controller.services;
 
 import com.google.gson.Gson;
+import myusick.controller.dto.EditDTO;
 import myusick.controller.dto.ProfileDTO;
 import myusick.controller.dto.PublisherDTO;
 import myusick.controller.MyusickService;
@@ -26,6 +27,45 @@ public class ProfileService {
             bands.add(band.getId());
         }
         return gson.toJson(bands);
+    }
+
+    /**
+     * TODO
+     * @param editDTO
+     * @return
+     */
+    public static String editProfile(EditDTO editDTO) {
+        Gson gson = new Gson();
+        if(editDTO.isType()){
+            //es grupo
+            if(editDTO.getAvatar() != null && !editDTO.getAvatar().isEmpty()){
+                new MyusickService().setAvatar(editDTO.getId(), editDTO.getAvatar());
+            }
+            if(editDTO.getDescripcion() != null && !editDTO.getDescripcion().isEmpty()){
+                new MyusickService().setDescripcion(editDTO.getId(), editDTO.getDescripcion());
+            }
+            if(editDTO.getNombre() != null && !editDTO.getNombre().isEmpty()) {
+                new MyusickService().setNombre(editDTO.getId(), editDTO.getNombre());
+            }
+        }else{
+            //es persona
+            if(editDTO.getAvatar() != null && !editDTO.getAvatar().isEmpty()){
+                new MyusickService().setAvatarPersona(editDTO.getId(),editDTO.getAvatar());
+            }
+            if(editDTO.getDescripcion() != null && !editDTO.getDescripcion().isEmpty()){
+                new MyusickService().setDescripcionPersona(editDTO.getId(),editDTO.getDescripcion());
+            }
+            if(editDTO.getNombre() != null && !editDTO.getNombre().isEmpty()){
+                new MyusickService().setNombrePersona(editDTO.getId(),editDTO.getNombre());
+            }
+            if(editDTO.getTelefono() != 0){
+                new MyusickService().setTelefono(editDTO.getId(),editDTO.getTelefono());
+            }
+            if(editDTO.getPassword() != null && !editDTO.getPassword().isEmpty() && editDTO.getPassword().equals(editDTO.getRepassword())){
+                new MyusickService().setPassword(editDTO.getId(),editDTO.getPassword());
+            }
+        }
+        return "{\"ok\": true}";
     }
 }
 
